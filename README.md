@@ -6,7 +6,7 @@ Main script inputs values from CSV into form, collects output values from the fo
 Test status will be marked success if expected output values from CSV "expected" fields match outputs from site.
 
 Input options
-* = required
+*Asterisk = required
 
 
 *Purchaser Type: 
@@ -26,35 +26,35 @@ Applicant 1's Age
 18+
 
 Employment Status (1)
-Unknown
-Employed
-Self-employed
-Homemaker
-Receiving Pension / Disability Benefit
-Student
-Key/Part-time
+Unknown, 
+Employed, 
+Self-employed, 
+Homemaker, 
+Receiving Pension / Disability Benefit, 
+Student, 
+Key/Part-time, 
 Unemployed
 
 Applicant 2's Age (If Joint)
 18+
 
 Employment Status (2) (If Joint)
-Unknown
-Employed
-Self-employed
-Homemaker
-Receiving Pension / Disability Benefit
-Student
-Key/Part-time
+Unknown, 
+Employed, 
+Self-employed, 
+Homemaker, 
+Receiving Pension / Disability Benefit, 
+Student, 
+Key/Part-time, 
 Unemployed
 	
 Marital Status
-Single
-Living Together
-Married/Civil Partnership
-Divorced
-Widowed
-Separated
+Single, 
+Living Together, 
+Married/Civil Partnership, 
+Divorced, 
+Widowed, 
+Separated 
 
 No Dependant Children
 0+
