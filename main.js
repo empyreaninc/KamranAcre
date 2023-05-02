@@ -164,7 +164,7 @@ async function run() {
             //Click dropdown for no. dependent children
             await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > button", page); await asyncWait(actionDelay);
             //Click option corresponding to input
-            if (noDependantChildren == 0) {
+            if (noDependantChildren == 0 || noDependantChildren == "" || noDependantChildren == undefined) {
                 await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay);
             } else if (noDependantChildren == 1) {
                 await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(actionDelay);
@@ -180,7 +180,7 @@ async function run() {
             //Click dropdown for no. dependent adults
             await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > button", page); await asyncWait(actionDelay);
             //Click option corresponding to input
-            if (noDependantAdults == 0) {
+            if (noDependantAdults == 0 || noDependantAdults == "" || noDependantAdults == undefined) {
                 await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay);
             } else if (noDependantAdults == 1) {
                 await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(actionDelay);

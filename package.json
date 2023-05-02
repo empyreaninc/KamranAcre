@@ -7,7 +7,7 @@
     "kamran-acre": "./main.js"
   },
   "scripts": {
-    "build": "nexe main.js --build"
+    "build": "pkg ."
   },
   "author": "Kamran Lautier",
   "license": "ISC",
