@@ -55,6 +55,7 @@ async function run() {
     const promises = [];
     //looping asynchronously to run all instances of test at once with promise.all()
     for (let i = 1; i < csvLines.length; i++) {
+        //splitting current csv line on comma to assign each cell's value to a variable for use in script
         const line = csvLines[i].split(',');
         let [purchaserType, jointMortgage, maximumLTV, applicant1Age, employmentStatus1, applicant2Age, employmentStatus2, maritalStatus, noDependantChildren, noDependantAdults, depositAmount, loanAmount, propertyValue, mortgageTermYears, assessOnInterestOnly, propertyPostcode, grossIncome, additionalIncome, otherNonTaxableIncome, limitedCompanyNetProfits, existingBTLRentalIncome, grossIncome2, additionalIncome2, limitedCompanyNetProfits2, otherNonTaxableIncome2, existingBTLRentalIncome2, existingMonthlyBTLOutgoings, totalMonthlyLoanPayments, creditCards, groundRentOrServiceCharge, travel, childCareCosts, otherExpenditure, existingMonthlyBTLOutgoings2, totalMonthlyLoanPayments2, creditCards2, groundRentOrServiceCharge2, travel2, childCareCosts2, otherExpenditure2, link, ExpectedTLA, ExpectedLTV, ExpectedTLAA, csvTLA, csvLTV, csvTLAA, csvErrorText, csvTestStatus] = line;
 
@@ -242,7 +243,7 @@ async function run() {
 
             //Input postcode
             await clickAndFill("#postcode", propertyPostcode, page); await asyncWait(actionDelay);
-            //Click "Next Step"
+            //Click "Next"
             await clickElem("#mortgageNextBtn", page); await asyncWait(2);
             await page.mouse.wheel(0, 150); await asyncWait(actionDelay);
             //Next 5 actions fill out Income section for person 1 
@@ -259,6 +260,7 @@ async function run() {
                 await clickAndFill("#a2otherNonTaxableIncome", otherNonTaxableIncome2, page); await asyncWait(0.5);
                 await clickAndFill("#a2existingBTLRentalIncome", existingBTLRentalIncome2, page); await asyncWait(0.5);
             };
+            //Click "Next"
             await clickElem("#incomeNextBtn", page); await asyncWait(2);
             //Fill out expenditure form for person 1 
             await clickAndFill("#a1existingBTLOutgoings", existingMonthlyBTLOutgoings, page); await asyncWait(0.5);
@@ -274,13 +276,16 @@ async function run() {
                 await clickAndFill("#a2rentAndServiceCharge", groundRentOrServiceCharge2, page); await asyncWait(0.5);
                 await clickAndFill("#a2travel", travel2, page); await asyncWait(0.5);
             };
+            //Scroll elements into view
             await page.mouse.wheel(0, 350); await asyncWait(actionDelay);
+            ///Fill remaining childcare cost and other expenditure fields for both applicantst
             await clickAndFill("#a1childcareCosts", childCareCosts, page); await asyncWait(0.5);
             await clickAndFill("#a1otherExpenditure", otherExpenditure, page); await asyncWait(0.5);
             if (jointMortgage == "Joint") {
                 await clickAndFill("#a2childcareCosts", childCareCosts2, page); await asyncWait(0.5);
                 await clickAndFill("#a2otherExpenditure", otherExpenditure2, page); await asyncWait(0.5);
             }
+            //click "Next"
             await clickElem("#expenditureNextBtn", page); await asyncWait(2);
             //Collect Result if error
             try {
