@@ -35,7 +35,17 @@ or
 ```bash
 pkg .
 ```
-5. Use executable as normal
+On MacOS you may aslso have to use 
+```bash
+chmod +x kamran-acre-macos
+```
+ to make the compiled item into an executable.
+
+5. Use executable as normal. MacOS may require 
+```bash
+sudo ./kamran-acre-macos
+``` 
+to launch with correct permissions.
 
 
 ## Requirements
