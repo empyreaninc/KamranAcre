@@ -1,0 +1,5 @@
+{
+    "Headless": false,
+    "ActionDelay": 0.5,
+    "DelayBeforeClosingInSeconds": 30
+}

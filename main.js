@@ -2,6 +2,10 @@ const fs = require('fs/promises');
 const fs2 = require('fs');
 const path = require('path');
 const { chromium } = require('playwright');
+const config = require('./settings.json');
+const headlessSetting = config.Headless
+const actionDelay = config.ActionDelay
+const delayBeforeClosingInSeconds = config.DelayBeforeClosingInSeconds
 
 const csvPath = 'testinputs.csv';
 //Wait func to slow down execution of script
@@ -36,7 +40,7 @@ async function updateCsvColumn(filePath, lineNumber, columnNumber, newString) {
 async function clickAndFill(selector, text, clickPage) {
     await clickElem(selector, clickPage); await asyncWait(1);
     //Input postcode
-    clickPage.keyboard.insertText(text); await asyncWait(1);
+    await clickPage.keyboard.insertText(text); await asyncWait(1);
 }
 //Converting wait function to async to allow it to be used with playwright async functions
 async function asyncWait(seconds) {
@@ -58,143 +62,143 @@ async function run() {
 
         const promise = (async () => {
             //launch playwright instance
-            const browser = await chromium.launch({ headless: false });
+            const browser = await chromium.launch({ headless: headlessSetting });
             const context = await browser.newContext();
             const page = await context.newPage();
             await page.goto(link);
             //selecting mortgage type
             await clickElem('#editMortgage', page);
-            await asyncWait(1);
+            await asyncWait(actionDelay);
             await clickElem("#mortgageTabPanel > div:nth-child(3) > div:nth-child(1) > div > div > div > button", page);
-            await asyncWait(1);
+            await asyncWait(actionDelay);
             if (purchaserType == "Buying first house") {
                 await clickElem("#mortgageTabPanel > div:nth-child(3) > div:nth-child(1) > div > div > div > div > ul > li.selected > a", page);
-                await asyncWait(1);
+                await asyncWait(actionDelay);
             } else if (purchaserType == "Buying a house - moving") {
-                await clickElem("#mortgageTabPanel > div:nth-child(3) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(3) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(actionDelay);
             } else if (purchaserType == "Moving to HSBC") {
-                await clickElem("#mortgageTabPanel > div:nth-child(3) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(3) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(actionDelay);
             };
             //select joint or sole mortgage
             await clickElem("#mortgageTabPanel > div:nth-child(3) > div:nth-child(2) > div > div > div > button", page);
-            await asyncWait(1);
+            await asyncWait(actionDelay);
             if (jointMortgage == "Joint") {
                 await clickElem("#mortgageTabPanel > div:nth-child(3) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(2) > a", page);
-                await asyncWait(1);
+                await asyncWait(actionDelay);
             } else if (jointMortgage == "Sole") {
-                await clickElem("#mortgageTabPanel > div:nth-child(3) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(3) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay);
             };
             //select LTV range
-            await clickElem("#mortgageTabPanel > div:nth-child(4) > div > div > div > div > button", page); await asyncWait(1);
+            await clickElem("#mortgageTabPanel > div:nth-child(4) > div > div > div > div > button", page); await asyncWait(actionDelay);
             if (maximumLTV == "<=85") {
-                await clickElem("#mortgageTabPanel > div:nth-child(4) > div > div > div > div > div > ul > li.selected > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(4) > div > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay);
             } else if (maximumLTV == ">85") {
-                await clickElem("#mortgageTabPanel > div:nth-child(4) > div > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(4) > div > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(actionDelay);
             };
             //Selecting applicant age
-            await clickElem("#mortgageTabPanel > div:nth-child(5) > div:nth-child(1) > div > div > div > button", page); await asyncWait(1);
+            await clickElem("#mortgageTabPanel > div:nth-child(5) > div:nth-child(1) > div > div > div > button", page); await asyncWait(actionDelay);
             //age minus 17 as index is age 18 at 1 on drop down.
-            if (applicant1Age < 19) { await clickElem("#mortgageTabPanel > div:nth-child(5) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(1) > a", page); await asyncWait(1); } else {
-                await clickElem(`#mortgageTabPanel > div:nth-child(5) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(${applicant1Age - 17}) > a`, page); await asyncWait(1);
+            if (applicant1Age < 19) { await clickElem("#mortgageTabPanel > div:nth-child(5) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(1) > a", page); await asyncWait(actionDelay); } else {
+                await clickElem(`#mortgageTabPanel > div:nth-child(5) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(${applicant1Age - 17}) > a`, page); await asyncWait(actionDelay);
             }
             //Selecting applicant employment status
-            await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > button", page); await asyncWait(1);
+            await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > button", page); await asyncWait(actionDelay);
             if (employmentStatus1 == "Unknown" || employmentStatus1 === "") {
-                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li.selected > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay);
             } else if (employmentStatus1 == "Employed") {
-                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(actionDelay);
             } else if (employmentStatus1 == "Self-employed") {
-                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(actionDelay);
             } else if (employmentStatus1 == "Homemaker") {
-                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(4) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(4) > a", page); await asyncWait(actionDelay);
             } else if (employmentStatus1 == "Receiving Pension / Disability Benifit") {
-                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(5) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(5) > a", page); await asyncWait(actionDelay);
             } else if (employmentStatus1 == "Student") {
-                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(6) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(6) > a", page); await asyncWait(actionDelay);
             } else if (employmentStatus1 == "Key/Part Time") {
-                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(7) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(7) > a", page); await asyncWait(actionDelay);
             } else if (employmentStatus1 == "Unemployed") {
-                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(8) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(8) > a", page); await asyncWait(actionDelay);
             };
             //if joint, selecitng age and employment status of second applicant
             if (jointMortgage == "Joint") {
-                await clickElem("#mortgageTabPanel > div:nth-child(5) > div:nth-child(2) > div > div > div > button", page); await asyncWait(1);
-                if (applicant2Age < 19) { await clickElem("#mortgageTabPanel > div:nth-child(5) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(1); } else {
-                    await clickElem(`#mortgageTabPanel > div:nth-child(5) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(${applicant2Age - 17}) > a`, page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(5) > div:nth-child(2) > div > div > div > button", page); await asyncWait(actionDelay);
+                if (applicant2Age < 19) { await clickElem("#mortgageTabPanel > div:nth-child(5) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay); } else {
+                    await clickElem(`#mortgageTabPanel > div:nth-child(5) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(${applicant2Age - 17}) > a`, page); await asyncWait(actionDelay);
                 };
-                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > button", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > button", page); await asyncWait(actionDelay);
                 if (employmentStatus2 == "Unknown" || employmentStatus2 === "") {
-                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(1);
+                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay);
                 } else if (employmentStatus2 == "Employed") {
-                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(1);
+                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(actionDelay);
                 } else if (employmentStatus2 == "Self-employed") {
-                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(1);
+                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(actionDelay);
                 } else if (employmentStatus2 == "Homemaker") {
-                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(4) > a", page); await asyncWait(1);
+                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(4) > a", page); await asyncWait(actionDelay);
                 } else if (employmentStatus2 == "Receiving Pension / Disability Benifit") {
-                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(5) > a", page); await asyncWait(1);
+                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(5) > a", page); await asyncWait(actionDelay);
                 } else if (employmentStatus2 == "Student") {
-                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(6) > a", page); await asyncWait(1);
+                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(6) > a", page); await asyncWait(actionDelay);
                 } else if (employmentStatus2 == "Key/Part Time") {
-                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(7) > a", page); await asyncWait(1);
+                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(7) > a", page); await asyncWait(actionDelay);
                 } else if (employmentStatus2 == "Unemployed") {
-                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(8) > a", page); await asyncWait(1);
+                    await clickElem("#mortgageTabPanel > div:nth-child(6) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(8) > a", page); await asyncWait(actionDelay);
                 };
             }
             //selecting relationship status
-            await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > button", page); await asyncWait(1);
+            await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > button", page); await asyncWait(actionDelay);
             if (maritalStatus == "Unknown") {
-                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li.selected > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay);
             } else if (maritalStatus == "Single") {
-                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(actionDelay);
             } else if (maritalStatus == "Living Together") {
-                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(actionDelay);
             } else if (maritalStatus == "Married/Civil Partnership") {
-                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(4) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(4) > a", page); await asyncWait(actionDelay);
             } else if (maritalStatus == "Divorced") {
-                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(5) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(5) > a", page); await asyncWait(actionDelay);
             } else if (maritalStatus == "Widowed") {
-                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(6) > a", page); await asyncWait(1);
-            } else if (maritalStatus == "Separated") { await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(7) > a", page); await asyncWait(1); }
-            await page.mouse.wheel(0, 200); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(6) > a", page); await asyncWait(actionDelay);
+            } else if (maritalStatus == "Separated") { await clickElem("#mortgageTabPanel > div:nth-child(7) > div > div > div > div > div > ul > li:nth-child(7) > a", page); await asyncWait(actionDelay); }
+            await page.mouse.wheel(0, 200); await asyncWait(actionDelay);
             //Click dropdown for no. dependent children
-            await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > button", page); await asyncWait(1);
+            await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > button", page); await asyncWait(actionDelay);
             //Click option corresponding to input
             if (noDependantChildren == 0) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li.selected > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay);
             } else if (noDependantChildren == 1) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(actionDelay);
             } else if (noDependantChildren == 2) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(actionDelay);
             } else if (noDependantChildren == 3) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(4) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(4) > a", page); await asyncWait(actionDelay);
             } else if (noDependantChildren == 4) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(5) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(5) > a", page); await asyncWait(actionDelay);
             } else if (noDependantChildren >= 5) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(6) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(6) > a", page); await asyncWait(actionDelay);
             };
             //Click dropdown for no. dependent adults
-            await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > button", page); await asyncWait(1);
+            await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > button", page); await asyncWait(actionDelay);
             //Click option corresponding to input
             if (noDependantAdults == 0) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay);
             } else if (noDependantAdults == 1) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(actionDelay);
             } else if (noDependantAdults == 2) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(3) > a", page); await asyncWait(actionDelay);
             } else if (noDependantAdults == 3) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(4) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(4) > a", page); await asyncWait(actionDelay);
             } else if (noDependantAdults == 4) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(5) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(5) > a", page); await asyncWait(actionDelay);
             } else if (noDependantAdults >= 5) {
-                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(6) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(8) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(6) > a", page); await asyncWait(actionDelay);
             };
 
             //Type deposit amount into textbox if present 
             if (depositAmount === undefined || depositAmount === '') {
                 console.log("No input for depositAmount")
             } else {
-                await clickAndFill("#depositAmount", depositAmount, page); await asyncWait(1);
+                await clickAndFill("#depositAmount", depositAmount, page); await asyncWait(actionDelay);
 
             };
 
@@ -202,20 +206,20 @@ async function run() {
             if (loanAmount === undefined || loanAmount === '') {
                 console.log("No input for loanAmount")
             } else {
-                await clickAndFill("#loanAmount", loanAmount, page); await asyncWait(1);
+                await clickAndFill("#loanAmount", loanAmount, page); await asyncWait(actionDelay);
 
             };
             //scrolling elements into view
-            await page.mouse.wheel(0, 400); await asyncWait(1);
+            await page.mouse.wheel(0, 400); await asyncWait(actionDelay);
 
-            //Type property value into textbox if present - "e" is usable for exponential symbol i.e 2e5 = 200,000
+            //Type property value into textbox if present - "e" is usable for exponential symbol i.e 2e5 = 200000
             if (propertyValue === undefined || propertyValue === '') {
                 console.log("No input for propertyValue")
             } else {
-                await clickAndFill("#estimatedPropertyValue", propertyValue, page); await asyncWait(1);
+                await clickAndFill("#estimatedPropertyValue", propertyValue, page); await asyncWait(actionDelay);
             };
             //Click Required mortgage term(s) (in years) dropdown 
-            await clickElem("#mortgageTabPanel > div:nth-child(11) > div:nth-child(1) > div > div > div > button", page); await asyncWait(1);
+            await clickElem("#mortgageTabPanel > div:nth-child(11) > div:nth-child(1) > div > div > div > button", page); await asyncWait(actionDelay);
             //Click number of years required 5-35. Index 1 at 5 years, hence value is years-4. Will default to 5 year term if empty.
             //Corrects mortgage term to 25 if assessing on interest basis only & mortgage input is over 25 years
             if (mortgageTermYears == 5 || mortgageTermYears === "") {
@@ -228,19 +232,19 @@ async function run() {
                 await clickElem(`#mortgageTabPanel > div:nth-child(11) > div:nth-child(1) > div > div > div > div > ul > li:nth-child(${mortgageTermYears - 4}) > a`, page)
             };
             //Click dropdown for Assess On Interest Only Basis
-            await clickElem("#mortgageTabPanel > div:nth-child(11) > div:nth-child(2) > div > div > div > button", page); await asyncWait(1);
+            await clickElem("#mortgageTabPanel > div:nth-child(11) > div:nth-child(2) > div > div > div > button", page); await asyncWait(actionDelay);
             //Click "Yes" or "No" corresponding to CSV input
             if (assessOnInterestOnly.toLowerCase() == "yes") {
-                await clickElem("#mortgageTabPanel > div:nth-child(11) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(11) > div:nth-child(2) > div > div > div > div > ul > li:nth-child(2) > a", page); await asyncWait(actionDelay);
             } else if (assessOnInterestOnly.toLowerCase() == "no") {
-                await clickElem("#mortgageTabPanel > div:nth-child(11) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(1);
+                await clickElem("#mortgageTabPanel > div:nth-child(11) > div:nth-child(2) > div > div > div > div > ul > li.selected > a", page); await asyncWait(actionDelay);
             };
 
             //Input postcode
-            await clickAndFill("#postcode", propertyPostcode, page); await asyncWait(1);
+            await clickAndFill("#postcode", propertyPostcode, page); await asyncWait(actionDelay);
             //Click "Next Step"
             await clickElem("#mortgageNextBtn", page); await asyncWait(2);
-            await page.mouse.wheel(0, 150); await asyncWait(1);
+            await page.mouse.wheel(0, 150); await asyncWait(actionDelay);
             //Next 5 actions fill out Income section for person 1 
             await clickAndFill("#a1grossIncome", grossIncome, page); await asyncWait(0.5);
             await clickAndFill("#a1additionalIncome", additionalIncome, page); await asyncWait(0.5);
@@ -270,7 +274,7 @@ async function run() {
                 await clickAndFill("#a2rentAndServiceCharge", groundRentOrServiceCharge2, page); await asyncWait(0.5);
                 await clickAndFill("#a2travel", travel2, page); await asyncWait(0.5);
             };
-            await page.mouse.wheel(0, 350); await asyncWait(1);
+            await page.mouse.wheel(0, 350); await asyncWait(actionDelay);
             await clickAndFill("#a1childcareCosts", childCareCosts, page); await asyncWait(0.5);
             await clickAndFill("#a1otherExpenditure", otherExpenditure, page); await asyncWait(0.5);
             if (jointMortgage == "Joint") {
@@ -312,7 +316,7 @@ async function run() {
                 await updateCsvColumn(csvPath, i, 49, "Fail");
             }
             //Allows time for inspecting browser instances before closing. Increase asyncWait amount if required.
-            await asyncWait(30);
+            await asyncWait(delayBeforeClosingInSeconds);
 
             await browser.close();
         })();
@@ -324,4 +328,5 @@ async function run() {
 }
 //Run runs the main script
 run();
+
 
