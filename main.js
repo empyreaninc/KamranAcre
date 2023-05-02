@@ -7,7 +7,7 @@ const headlessSetting = config.Headless
 const actionDelay = config.ActionDelay
 const delayBeforeClosingInSeconds = config.DelayBeforeClosingInSeconds
 
-const csvPath = 'testinputs.csv';
+const csvPath = './testinputs.csv';
 //Wait func to slow down execution of script
 function wait(seconds) {
     return new Promise(resolve => setTimeout(resolve, seconds * 1000));
