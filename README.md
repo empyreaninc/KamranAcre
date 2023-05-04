@@ -129,6 +129,7 @@ ENTER NUMERICAL AMOUNTS WITHOUT COMMAS OR YOU RISK BREAKING THE CSV.
 [18+]
 
 - Employment Status (2) (If Joint)
+
 [Unknown]
 
 [Employed] 
@@ -160,18 +161,23 @@ ENTER NUMERICAL AMOUNTS WITHOUT COMMAS OR YOU RISK BREAKING THE CSV.
 
 
 - No Dependant Children
+
 [0+]
 
 - No Dependant Adults
+
 [0+]
 
 - Deposit Amount (optional)
+
 [Numerical]
 
 - Loan Amount (optional)
+
 [Numerical]
 
 - Property Value (optional)
+
 [Numerical]
 
 - The required mortgage term(s) (in years)*
@@ -184,106 +190,142 @@ ENTER NUMERICAL AMOUNTS WITHOUT COMMAS OR YOU RISK BREAKING THE CSV.
 [No]
 
 - Property Postcode*
+
 [First 2 chars minimum eg E1]
 
 - Gross Income
+
 [Numerical]
 
 - Additional Income
+
 [Numerical]
 
 - Limited Company Net profits
+
 [Numerical]
 
 - Other Non Taxable Income
+
 [Numerical]
 
 - Existing BTL Rental Income
+
 [Numerical]
 
 - Gross Income (2)
+
 [Numerical]
 
 - Additional Income (2)
+
 [Numerical]
 
 - Limited Company Net profits (2)
+
 [Numerical]
 
 - Other Non Taxable Income (2)
+
 [Numerical]
 
 - Existing BTL Rental Income (2)
+
 [Numerical]
 
 - Existing Monthly BTL Outgoings
+
 [Numerical]
 
 - Total Monthly Loan Payments (excl Student Loans)
+
 [Numerical]
 
 - Credit Cards
+
 [Numerical]
 
 - Ground Rent / Service Charge
+
 [Numerical]
 
 - Travel
+
 [Numerical]
 
 - Child Care Costs
+
 [Numerical]
 
 - Other Expenditure
+
 [Numerical]
 
 - Existing Monthly BTL Outgoings (2)
+
 [Numerical]
 
 - Total Monthly Loan Payments (excl Student Loans) (2)
+
 [Numerical]
 
 - Credit Cards (2)
+
 [Numerical]
 
 - Ground Rent / Service Charge (2)
+
 [Numerical]
 
 - Travel (2)
+
 [Numerical]
 
 - Child Care Costs (2)
+
 [Numerical]
 
 - Other Expenditure (2)
+
 [Numerical]
 
 - Link
+
 [Link to calculator you want to test]
 
 - Expected TLA
+
 [Numerical]
 
 - Expected LTV
+
 [Numerical 0-100]
 
 - Expected TLAA 
+
 [Numerical]
 
 - TLA
+
 [result field, don't fill]
 
 - LTV
+
 [result field, don't fill]
 
 - TLAA
+
 [result field, don't fill]
 
 - Error Text
+
 [result field, don't fill]
 
 - Test Status
+
 [result field, don't fill]
+
+
 ## Maintainability (for contributors)
 
 Certain choices were made to ensure the script is expandable. 
